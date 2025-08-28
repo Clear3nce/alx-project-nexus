@@ -29,5 +29,5 @@ A scalable backend for real-time polling applications built with Django and Post
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/online-poll-system.git
-cd online-poll-system
+git clone (https://github.com/Clear3nce/alx-project-nexus.git)
+cd alx-project-nexus
