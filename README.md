@@ -3,7 +3,6 @@
 Welcome to **Project Nexus**, a consolidated knowledge repository that documents major learnings from both the **ProDev Frontend Engineering** and **ProDev Backend Engineering** programs.
 
 This repository serves as a reference point for core concepts, tools, best practices, real-world challenges, and cross-functional collaboration efforts that took place during the ALX ProDev journey.
-# ProDev BE - Online Poll System
 
 ---
 
