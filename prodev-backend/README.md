@@ -1,5 +1,5 @@
 # **MC Poll System API (Django + DRF)**
-- Backend for **MC Poll System** — a production-style polling API with polls, options, voting, JWT auth, CORS, and Swagger docs.
+* Backend for **MC Poll System** — a production-style polling API with polls, options, voting, JWT auth, CORS, and Swagger docs.
 
 **Project by**: Muluvhu Clearence Mpho (ALX – ProDev Backend)
 Tech: Django, Django REST Framework, SimpleJWT, django-filter, drf-spectacular
@@ -275,5 +275,6 @@ MIT (or your preferred license)
 ## 📣 Credits
 
 Built by **Muluvhu Clearence Muluvhu** for **ALX ProDev Backend (Project Nexus)**.  
+
 
 
