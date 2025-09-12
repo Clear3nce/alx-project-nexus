@@ -7,8 +7,8 @@ Tech: Django, Django REST Framework, SimpleJWT, django-filter, drf-spectacular
 ---
 ## ✨ Features
 - **Polls & Options** CRUD
-- **Voting system with duplicate prevention
-- Real-time results calculation
+- **Voting system with duplicate prevention**
+- **Real-time results calculation**
 - **JWT authentication** (access/refresh)
 - **Swagger** / ReDoc interactive docs
 - **CORS** enabled for frontend integration
@@ -275,4 +275,5 @@ MIT (or your preferred license)
 ## 📣 Credits
 
 Built by **Muluvhu Clearence Muluvhu** for **ALX ProDev Backend (Project Nexus)**.  
+
 
