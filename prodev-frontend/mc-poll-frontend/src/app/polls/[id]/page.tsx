@@ -1,12 +1,13 @@
 'use client';
 
-import {mockPoll} from "../../data/mockPollData";
+import { mockPoll } from "../../data/mockPollData";
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { fetchPoll, voteOnPoll, clearCurrentPoll } from '@/lib/slices/pollsSlice';
 import PollResults from '@/components/PollResults';
 import Link from 'next/link';
+
 
 export default function PollDetailPage() {
   const { id } = useParams();
