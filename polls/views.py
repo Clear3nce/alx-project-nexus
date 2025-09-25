@@ -10,7 +10,30 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import Poll, Option, Vote
 from .serializers import PollSerializer, VoteSerializer, CreatePollSerializer
 
+"""
+    API endpoint for managing polls.
+    
+    list:
+    Return all polls.
+    
+    create:
+    Create a new poll.
+    
+    retrieve:
+    Return a specific poll.
+    
+    update:
+    Update a poll.
+    
+    partial_update:
+    Partially update a poll.
+    
+    destroy:
+    Delete a poll.
+"""
+
 class PollViewSet(viewsets.ModelViewSet):
+    
     queryset = Poll.objects.all()
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ['is_active']
