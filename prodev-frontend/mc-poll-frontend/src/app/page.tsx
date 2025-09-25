@@ -28,7 +28,7 @@ export default function Home() {
         </p>
         <div className="space-x-4">
           <Link
-            href="/polls"
+            href="/polls/featuredPolls"
             className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           >
             Browse Polls
