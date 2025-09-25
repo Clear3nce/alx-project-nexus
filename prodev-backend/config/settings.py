@@ -166,7 +166,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 # Spectacular Settings
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'MK Poll System API',
+    'TITLE': 'MC Poll System API',
     'DESCRIPTION': 'A polling system API built with Django REST Framework',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
