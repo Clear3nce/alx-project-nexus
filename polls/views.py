@@ -40,6 +40,8 @@ class PollViewSet(viewsets.ModelViewSet):
     search_fields = ['question']
     ordering_fields = ['created_at', 'expires_at']
     
+    filter_backends = [SearchFilter, OrderingFilter]  # Remove DjangoFilterBackend temporarily
+    
     def get_serializer_class(self):
         if self.action == 'create':
             return CreatePollSerializer
