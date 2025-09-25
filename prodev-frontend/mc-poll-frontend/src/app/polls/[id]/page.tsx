@@ -1,143 +1,104 @@
-'use client';
+"use client";
 
-import { mockPoll } from "../../data/mockPollData";
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { fetchPoll, voteOnPoll, clearCurrentPoll } from '@/lib/slices/pollsSlice';
-import PollResults from '@/components/PollResults';
-import Link from 'next/link';
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { useState } from "react";
 
+// Mock poll data
+const mockPolls = [
+  {
+    id: "22",
+    question: "Which framework do you prefer?",
+    status: "active",
+    created_at: "2025-09-20",
+    expires_at: "2025-09-30",
+    total_votes: 12,
+    options: [
+      { id: "opt1", text: "React" },
+      { id: "opt2", text: "Vue" },
+      { id: "opt3", text: "Angular" }
+    ]
+  },
+  {
+    id: "33",
+    question: "Which database do you use most?",
+    status: "expired",
+    created_at: "2025-09-10",
+    expires_at: "2025-09-15",
+    total_votes: 20,
+    options: [
+      { id: "opt1", text: "PostgreSQL" },
+      { id: "opt2", text: "MySQL" },
+      { id: "opt3", text: "MongoDB" }
+    ]
+  }
+];
 
 export default function PollDetailPage() {
-  const { id } = useParams();
-  const router = useRouter();
-  const { currentPoll, isLoading } = useAppSelector((state) => state.polls);
-  const { user } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
-  
-  const [selectedOption, setSelectedOption] = useState('');
+  const { id } = useParams(); // get id from URL
+  const poll = mockPolls.find((p) => p.id === id); // find poll by id
+  const [selectedOption, setSelectedOption] = useState("");
   const [hasVoted, setHasVoted] = useState(false);
-  const [voterId, setVoterId] = useState('');
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchPoll(id as string));
-    }
-    return () => {
-      dispatch(clearCurrentPoll());
-    };
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    if (currentPoll) {
-      // Check if user has already voted
-      const storedVote = localStorage.getItem(`poll_${id}_vote`);
-      if (storedVote) {
-        setHasVoted(true);
-        setSelectedOption(storedVote);
-      }
-      
-      // Generate or get voter ID
-      let voter = localStorage.getItem('voter_id');
-      if (!voter) {
-        voter = `voter_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        localStorage.setItem('voter_id', voter);
-      }
-      setVoterId(voter);
-    }
-  }, [currentPoll, id]);
-
-  const handleVote = async () => {
-    if (!selectedOption || !currentPoll) return;
-
-    try {
-      await dispatch(voteOnPoll({
-        pollId: currentPoll.id,
-        optionId: selectedOption,
-        voterId: user?.username || voterId
-      })).unwrap();
-
-      // Store that this user has voted
-      localStorage.setItem(`poll_${id}_vote`, selectedOption);
-      setHasVoted(true);
-    } catch (error) {
-      console.error('Failed to vote:', error);
-      alert('Failed to vote. You may have already voted in this poll.');
-    }
-  };
-
-  if (isLoading && !currentPoll) {
-    return (
-      <div className="text-center py-12">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-        <p className="mt-4 text-gray-600">Loading poll...</p>
-      </div>
-    );
-  }
-
-  if (!currentPoll) {
+  if (!poll) {
     return (
       <div className="text-center py-12">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Poll Not Found</h1>
-        <p className="text-gray-600 mb-6">The poll you are looking for does not exist.</p>
-        <Link
-          href="/polls"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-        >
+        <p className="text-gray-600 mb-6">The poll with ID {id} does not exist.</p>
+        <Link href="/polls" className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
           Back to Polls
         </Link>
       </div>
     );
   }
 
+  const handleVote = () => {
+    if (!selectedOption) return;
+    setHasVoted(true);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Poll Header */}
+    <div className="max-w-4xl mx-auto p-6 space-y-8 font-sans">
       <div className="bg-white rounded-lg shadow-md p-6">
-        <Link
-          href="/polls"
-          className="text-blue-500 hover:text-blue-600 mb-4 inline-block"
-        >
+        <Link href="/polls" className="text-blue-500 hover:text-blue-600 mb-4 inline-block">
           ← Back to Polls
         </Link>
 
         <div className="flex justify-between items-start mb-4">
-          <h1 className="text-2xl font-bold text-gray-800">{currentPoll.question}</h1>
+          <h1 className="text-2xl font-bold text-gray-800">{poll.question}</h1>
           <span
             className={`px-3 py-1 rounded-full text-sm font-medium ${
-              currentPoll.status === 'active'
-                ? 'bg-green-100 text-green-800'
-                : currentPoll.status === 'expired'
-                ? 'bg-red-100 text-red-800'
-                : 'bg-gray-100 text-gray-800'
+              poll.status === "active"
+                ? "bg-green-100 text-green-800"
+                : poll.status === "expired"
+                ? "bg-red-100 text-red-800"
+                : "bg-gray-100 text-gray-800"
             }`}
           >
-            {currentPoll.status.toUpperCase()}
+            {poll.status.toUpperCase()}
           </span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 mb-6">
           <div>
-            <strong>Created:</strong> {new Date(currentPoll.created_at).toLocaleDateString()}
+            <strong>Created:</strong> {new Date(poll.created_at).toLocaleDateString()}
           </div>
           <div>
-            <strong>Expires:</strong> {new Date(currentPoll.expires_at).toLocaleDateString()}
+            <strong>Expires:</strong> {new Date(poll.expires_at).toLocaleDateString()}
           </div>
           <div>
-            <strong>Total Votes:</strong> {currentPoll.total_votes}
+            <strong>Total Votes:</strong> {poll.total_votes}
           </div>
           <div>
-            <strong>Status:</strong> {currentPoll.status}
+            <strong>Status:</strong> {poll.status}
           </div>
         </div>
 
-        {/* Voting Section */}
-        {currentPoll.status === 'active' && !hasVoted ? (
+        {poll.status === "active" && !hasVoted ? (
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Cast Your Vote</h3>
             <div className="space-y-2">
-              {currentPoll.options.map((option) => (
+              {poll.options.map((option) => (
                 <label key={option.id} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
                   <input
                     type="radio"
@@ -171,9 +132,18 @@ export default function PollDetailPage() {
         )}
       </div>
 
-      {/* Results Section */}
-      {hasVoted || currentPoll.status !== 'active' ? (
-        <PollResults poll={currentPoll} />
+      {hasVoted || poll.status !== "active" ? (
+        <div className="bg-white shadow rounded-lg p-6">
+          <h3 className="font-semibold mb-3">Poll Results</h3>
+          <ul className="space-y-2">
+            {poll.options.map((opt) => (
+              <li key={opt.id} className="flex justify-between items-center border p-2 rounded">
+                <span>{opt.text}</span>
+                <span className="font-bold text-gray-700">X votes</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
           <p className="text-yellow-800">Results will be visible after you vote or when the poll ends.</p>

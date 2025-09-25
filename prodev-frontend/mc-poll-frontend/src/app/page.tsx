@@ -6,16 +6,40 @@ import { useAppSelector, useAppDispatch } from '@/lib/hooks';
 import { fetchPolls } from '@/lib/slices/pollsSlice';
 import PollCard from '@/components/PollCard';
 
+// second data.
+import { useState } from "react";
+import { pollsWithData, pollsEmpty } from "./data/mockPolls";
+import { Poll } from "@/types/poll"
+
 export default function Home() {
-  const { polls, isLoading } = useAppSelector((state) => state.polls);
-  const { user } = useAppSelector((state) => state.auth);
+  //const { polls, isLoading } = useAppSelector((state) => state.polls);
+  //const { user } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchPolls({ ordering: '-created_at', page: 1 }));
   }, [dispatch]);
 
-  const featuredPolls = polls.slice(0, 3);
+  //const featuredPolls = polls.slice(0, 3);
+
+
+
+  const [featuredPolls, setFeaturedPolls] = useState<Poll[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const user = true; // simulate logged-in user
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Toggle between pollsWithData or pollsEmpty to test both scenarios
+      setFeaturedPolls(pollsWithData); // change to pollsWithData to show polls
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+
+
 
   return (
     <div className="space-y-12">
@@ -33,6 +57,8 @@ export default function Home() {
           >
             Browse Polls
           </Link>
+
+          
           {user && (
             <Link
               href="/polls/create"

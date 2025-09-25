@@ -43,7 +43,7 @@ class CreatePollSerializer(serializers.ModelSerializer):
     options = serializers.ListField(
         child=serializers.CharField(max_length=255, min_length=1),
         write_only=True,
-        min_length=2  # At least two options required
+        min_length=2
     )
     
     class Meta:
@@ -59,7 +59,6 @@ class CreatePollSerializer(serializers.ModelSerializer):
         if len(value) < 2:
             raise serializers.ValidationError("At least two options are required")
         
-        # Check for duplicate options
         if len(value) != len(set(value)):
             raise serializers.ValidationError("Options must be unique")
         
@@ -78,3 +77,7 @@ class CreatePollSerializer(serializers.ModelSerializer):
             Option.objects.create(poll=poll, text=option_text)
         
         return poll
+    
+    def to_representation(self, instance):
+        # This will return the full poll data including options
+        return PollSerializer(instance, context=self.context).data

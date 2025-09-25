@@ -165,7 +165,7 @@ export default function PollsPage() {
           >
             Clear filters
           </button>
-        </div>
+        </div> 
       )}
     </div>
   );
