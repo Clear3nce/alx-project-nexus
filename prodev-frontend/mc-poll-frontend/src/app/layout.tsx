@@ -1,22 +1,18 @@
 'use client';
 
+import './globals.css';
 import { ReactNode } from 'react';
-import { Provider } from 'react-redux';
-import { store } from '@/lib/store';
+import StoreProvider from '@/app/StoreProvider';
 import Navbar from '@/components/Navbar';
 
-interface Props {
-  children: ReactNode;
-}
-
-export default function RootLayout({ children }: Props) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body>
-        <Provider store={store}>
+      <body className="bg-gray-50 min-h-screen">
+        <StoreProvider>
           <Navbar />
-          {children}
-        </Provider>
+          <main className="pt-6">{children}</main>
+        </StoreProvider>
       </body>
     </html>
   );

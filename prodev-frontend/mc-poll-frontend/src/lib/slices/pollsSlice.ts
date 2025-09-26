@@ -1,6 +1,21 @@
-// src/lib/slices/pollsSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Poll } from '@/types/poll'; // keep your Poll type
+
+export interface PollOption {
+  id: string;
+  text: string;
+  vote_count: number;
+}
+
+export interface Poll {
+  id: string;
+  question: string;
+  created_at: string;
+  expires_at: string;
+  is_active: boolean;
+  status: string;
+  total_votes: number;
+  options: PollOption[];
+}
 
 interface PollsState {
   polls: Poll[];
@@ -8,10 +23,8 @@ interface PollsState {
   error: string | null;
 }
 
-// Mock fetchPolls API
-export const fetchPolls = createAsyncThunk('polls/fetchPolls', async () => {
-  await new Promise((resolve) => setTimeout(resolve, 1000)); // simulate network
-  // Return mock data
+export const fetchPolls = createAsyncThunk<Poll[]>('polls/fetchPolls', async () => {
+  await new Promise((resolve) => setTimeout(resolve, 500));
   return [
     {
       id: '1',
@@ -27,21 +40,7 @@ export const fetchPolls = createAsyncThunk('polls/fetchPolls', async () => {
         { id: 'c', text: 'Green', vote_count: 12 },
       ],
     },
-    {
-      id: '2',
-      question: 'Which frontend framework do you prefer?',
-      created_at: new Date().toISOString(),
-      expires_at: new Date(Date.now() + 86400000).toISOString(),
-      is_active: true,
-      status: 'active',
-      total_votes: 30,
-      options: [
-        { id: 'a', text: 'React', vote_count: 15 },
-        { id: 'b', text: 'Vue', vote_count: 10 },
-        { id: 'c', text: 'Angular', vote_count: 5 },
-      ],
-    },
-  ] as Poll[];
+  ];
 });
 
 const initialState: PollsState = {

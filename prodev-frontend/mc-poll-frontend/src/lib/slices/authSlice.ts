@@ -11,23 +11,21 @@ interface AuthState {
   error: string | null;
 }
 
-// Mock login
 export const login = createAsyncThunk<User, { username: string; password: string }>(
   'auth/login',
   async (credentials) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
-    return { username: credentials.username }; // mock user
+    return { username: credentials.username };
   }
 );
 
-// Mock register
-export const register = createAsyncThunk<
-  User,
-  { username: string; email: string; password: string }
->('auth/register', async (data) => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  return { username: data.username, email: data.email }; // mock user
-});
+export const register = createAsyncThunk<User, { username: string; email: string; password: string }>(
+  'auth/register',
+  async (data) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    return { username: data.username, email: data.email };
+  }
+);
 
 const initialState: AuthState = {
   user: null,
@@ -42,30 +40,31 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    logout: (state) => {
+      state.user = null;
+    },
   },
   extraReducers: (builder) => {
     builder
-      // login
       .addCase(login.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
-        state.loading = false;
         state.user = action.payload;
+        state.loading = false;
       })
       .addCase(login.rejected, (state) => {
         state.loading = false;
         state.error = 'Login failed';
       })
-      // register
       .addCase(register.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(register.fulfilled, (state, action: PayloadAction<User>) => {
-        state.loading = false;
         state.user = action.payload;
+        state.loading = false;
       })
       .addCase(register.rejected, (state) => {
         state.loading = false;
@@ -74,5 +73,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearError } = authSlice.actions;
+export const { clearError, logout } = authSlice.actions;
 export default authSlice.reducer;
