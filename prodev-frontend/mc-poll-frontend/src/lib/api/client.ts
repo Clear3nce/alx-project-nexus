@@ -1,16 +1,16 @@
 // src/lib/api/client.ts
 
-// ✅ Mock API client – no axios needed
+// Mock API client — no axios needed
 export const api = {
-  get: async (url: string) => {
+  get: async (_url: string) => {
     return { data: {} };
   },
-  post: async (url: string, body?: unknown) => {
+  post: async (_url: string, _body?: unknown) => {
     return { data: {} };
   },
 };
 
-// ✅ Mock authApi for login/register/logout
+// Mock authApi for login/register/logout
 export const authApi = {
   login: async (credentials: { username: string; password: string }) => {
     return {
@@ -18,11 +18,7 @@ export const authApi = {
     };
   },
 
-  register: async (data: {
-    username: string;
-    email: string;
-    password: string;
-  }) => {
+  register: async (data: { username: string; email: string; password: string }) => {
     return {
       data: { user: { id: 1, username: data.username, email: data.email } },
     };

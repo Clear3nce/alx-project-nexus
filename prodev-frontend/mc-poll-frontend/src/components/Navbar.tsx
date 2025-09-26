@@ -1,15 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { logoutUser } from '@/lib/slices/authSlice';
+import { useAppSelector } from '@/lib/hooks';
 
 export default function Navbar() {
   const { user } = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch();
 
+  // Placeholder logout function for now
   const handleLogout = () => {
-    dispatch(logoutUser());
+    console.log('Logout clicked'); // Replace with real logout logic later
   };
 
   return (

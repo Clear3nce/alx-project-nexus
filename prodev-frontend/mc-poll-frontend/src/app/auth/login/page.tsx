@@ -13,9 +13,7 @@ export default function LoginPage() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (user) {
-      router.push('/polls');
-    }
+    if (user) router.push('/polls');
   }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,21 +22,18 @@ export default function LoginPage() {
       await dispatch(login(credentials)).unwrap();
       router.push('/polls');
     } catch {
-      // Error is already handled in the slice
+      // Handled in slice
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentials({
-      ...credentials,
-      [e.target.name]: e.target.value,
-    });
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
       <h1 className="text-2xl font-bold text-center mb-6">Login to MC Polls</h1>
-      
+
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
           {error}

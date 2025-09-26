@@ -1,4 +1,3 @@
-// src/lib/slices/authSlice.ts
 'use client';
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
@@ -22,7 +21,7 @@ const initialState: AuthState = {
   error: null,
 };
 
-// ✅ Async thunks using mock authApi
+// Async thunks
 export const login = createAsyncThunk(
   'auth/login',
   async (credentials: { username: string; password: string }) => {
@@ -44,11 +43,14 @@ export const logout = createAsyncThunk('auth/logout', async () => {
   return response.data;
 });
 
-// ✅ Slice definition
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // login
@@ -64,7 +66,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = 'Login failed';
       })
-
       // register
       .addCase(register.pending, (state) => {
         state.loading = true;
@@ -78,7 +79,6 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = 'Register failed';
       })
-
       // logout
       .addCase(logout.fulfilled, (state) => {
         state.user = null;
@@ -86,4 +86,5 @@ const authSlice = createSlice({
   },
 });
 
+export const { clearError } = authSlice.actions;
 export default authSlice.reducer;
