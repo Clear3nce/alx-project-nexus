@@ -1,38 +1,34 @@
 // src/lib/api/client.ts
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
 
-async function client(endpoint: string, { body, token, ...customConfig }: any = {}) {
-  const config: RequestInit = {
-    method: body ? 'POST' : 'GET',
-    ...customConfig,
-  };
+// ✅ Mock API client – no axios needed
+export const api = {
+  get: async (url: string) => {
+    return { data: {} };
+  },
+  post: async (url: string, body?: unknown) => {
+    return { data: {} };
+  },
+};
 
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
+// ✅ Mock authApi for login/register/logout
+export const authApi = {
+  login: async (credentials: { username: string; password: string }) => {
+    return {
+      data: { user: { id: 1, username: credentials.username } },
+    };
+  },
 
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
+  register: async (data: {
+    username: string;
+    email: string;
+    password: string;
+  }) => {
+    return {
+      data: { user: { id: 1, username: data.username, email: data.email } },
+    };
+  },
 
-  if (body) {
-    config.body = JSON.stringify(body);
-  }
-
-  config.headers = headers;
-
-  try {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-    const data = await response.json();
-
-    if (response.ok) {
-      return data;
-    } else {
-      throw new Error(data.message || 'Request failed');
-    }
-  } catch (error) {
-    throw error;
-  }
-}
-
-export default client;
+  logout: async () => {
+    return { data: { success: true } };
+  },
+};

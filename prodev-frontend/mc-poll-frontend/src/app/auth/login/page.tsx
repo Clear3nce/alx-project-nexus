@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAppSelector, useAppDispatch } from '@/lib/hooks';
-import { loginUser, clearError } from '@/lib/slices/authSlice';
+import { login } from '@/lib/slices/authSlice';
 
 export default function LoginPage() {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const router = useRouter();
-  const { user, isLoading, error } = useAppSelector((state) => state.auth);
+  const { user, loading, error } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -18,18 +18,13 @@ export default function LoginPage() {
     }
   }, [user, router]);
 
-  useEffect(() => {
-    dispatch(clearError());
-  }, [dispatch]);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await dispatch(loginUser(credentials)).unwrap();
+      await dispatch(login(credentials)).unwrap();
       router.push('/polls');
-    } catch (error:unknown) {
-      
-      // Error is handled by the slice
+    } catch {
+      // Error is already handled in the slice
     }
   };
 
@@ -85,16 +80,16 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={loading}
           className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 transition-colors"
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          {loading ? 'Logging in...' : 'Login'}
         </button>
       </form>
 
       <div className="mt-4 text-center">
         <p className="text-gray-600">
-          Do not have an account?{' '}
+          Don’t have an account?{' '}
           <Link href="/auth/register" className="text-blue-500 hover:text-blue-600">
             Register here
           </Link>
