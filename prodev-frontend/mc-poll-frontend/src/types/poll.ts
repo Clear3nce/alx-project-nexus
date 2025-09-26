@@ -21,3 +21,10 @@ export interface Option {
     ordering?: 'created_at' | '-created_at' | 'total_votes' | '-total_votes';
     page?: number;
   }
+
+  export interface PollsResponse {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Poll[];
+  }
