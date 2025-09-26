@@ -1,14 +1,22 @@
 'use client';
 
 import Link from 'next/link';
-import { useAppSelector } from '@/lib/hooks';
+
+interface User {
+  username: string;
+}
+
+// MOCK: toggle between null or a mock user
+const mockUser: User | null = {
+  username: 'JohnDoe',
+};
+// const mockUser: User | null = null; // Use this to test logged-out state
 
 export default function Navbar() {
-  const { user } = useAppSelector((state) => state.auth);
+  const user = mockUser;
 
-  // Placeholder logout function for now
   const handleLogout = () => {
-    console.log('Logout clicked'); // Replace with real logout logic later
+    console.log('Logout clicked'); // Placeholder
   };
 
   return (

@@ -1,110 +1,74 @@
+// src/lib/slices/pollsSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Poll, PollFilters } from '@/types/poll';
-import { pollsApi } from '@/lib/api/polls';
+import { Poll } from '@/types/poll'; // keep your Poll type
 
 interface PollsState {
   polls: Poll[];
-  currentPoll: Poll | null;
-  filters: PollFilters;
-  isLoading: boolean;
+  loading: boolean;
   error: string | null;
-  hasMore: boolean;
 }
+
+// Mock fetchPolls API
+export const fetchPolls = createAsyncThunk('polls/fetchPolls', async () => {
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // simulate network
+  // Return mock data
+  return [
+    {
+      id: '1',
+      question: 'What is your favorite color?',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 86400000).toISOString(),
+      is_active: true,
+      status: 'active',
+      total_votes: 42,
+      options: [
+        { id: 'a', text: 'Red', vote_count: 10 },
+        { id: 'b', text: 'Blue', vote_count: 20 },
+        { id: 'c', text: 'Green', vote_count: 12 },
+      ],
+    },
+    {
+      id: '2',
+      question: 'Which frontend framework do you prefer?',
+      created_at: new Date().toISOString(),
+      expires_at: new Date(Date.now() + 86400000).toISOString(),
+      is_active: true,
+      status: 'active',
+      total_votes: 30,
+      options: [
+        { id: 'a', text: 'React', vote_count: 15 },
+        { id: 'b', text: 'Vue', vote_count: 10 },
+        { id: 'c', text: 'Angular', vote_count: 5 },
+      ],
+    },
+  ] as Poll[];
+});
 
 const initialState: PollsState = {
   polls: [],
-  currentPoll: null,
-  filters: { page: 1 },
-  isLoading: false,
+  loading: false,
   error: null,
-  hasMore: true,
 };
-
-export const fetchPolls = createAsyncThunk(
-  'polls/fetchPolls',
-  async (filters: PollFilters, { rejectWithValue }) => {
-    try {
-      const response = await pollsApi.getPolls(filters);
-      return response;
-    } catch (error: unknown) {
-        if (error instanceof Error){
-            return rejectWithValue(error.message || 'Failed to fetch polls');
-        }
-      return rejectWithValue('Failed to fetch polls');
-    }
-  }
-);
-
-export const fetchPoll = createAsyncThunk(
-  'polls/fetchPoll',
-  async (id: string, { rejectWithValue }) => {
-    try {
-      return await pollsApi.getPoll(id);
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            return rejectWithValue(error.message || 'Failed to fetch poll');
-        }
-        return rejectWithValue('Failed to fetch poll');
-    }
-  }
-);
-
-export const voteOnPoll = createAsyncThunk(
-  'polls/vote',
-  async ({ pollId, optionId, voterId }: { pollId: string; optionId: string; voterId: string }, { rejectWithValue }) => {
-    try {
-      await pollsApi.vote(pollId, optionId, voterId);
-      return await pollsApi.getPollResults(pollId);
-    } catch (error: unknown) {
-        if (error instanceof Error){
-            return rejectWithValue(error.message || 'Failed to vote');
-        }
-      return rejectWithValue('Failed to vote');
-    }
-  }
-);
 
 const pollsSlice = createSlice({
   name: 'polls',
   initialState,
-  reducers: {
-    setFilters: (state, action: PayloadAction<PollFilters>) => {
-      state.filters = { ...state.filters, ...action.payload };
-    },
-    clearCurrentPoll: (state) => {
-      state.currentPoll = null;
-    },
-    clearError: (state) => {
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPolls.pending, (state) => {
-        state.isLoading = true;
+        state.loading = true;
+        state.error = null;
       })
-      .addCase(fetchPolls.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.polls = action.payload.results;
-        state.hasMore = !!action.payload.next;
+      .addCase(fetchPolls.fulfilled, (state, action: PayloadAction<Poll[]>) => {
+        state.polls = action.payload;
+        state.loading = false;
       })
-      .addCase(fetchPolls.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.payload as string;
-      })
-      .addCase(fetchPoll.fulfilled, (state, action) => {
-        state.currentPoll = action.payload;
-      })
-      .addCase(voteOnPoll.fulfilled, (state, action) => {
-        state.currentPoll = action.payload;
-        // Update the poll in the list if it exists
-        const index = state.polls.findIndex(poll => poll.id === action.payload.id);
-        if (index !== -1) {
-          state.polls[index] = action.payload;
-        }
+      .addCase(fetchPolls.rejected, (state) => {
+        state.loading = false;
+        state.error = 'Failed to fetch polls';
       });
   },
 });
 
-export const { setFilters, clearCurrentPoll, clearError } = pollsSlice.actions;
 export default pollsSlice.reducer;

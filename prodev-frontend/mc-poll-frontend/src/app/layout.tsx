@@ -1,34 +1,22 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import StoreProvider from './StoreProvider';
+'use client';
+
+import { ReactNode } from 'react';
+import { Provider } from 'react-redux';
+import { store } from '@/lib/store';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 
-const inter = Inter({ subsets: ['latin'] });
+interface Props {
+  children: ReactNode;
+}
 
-export const metadata: Metadata = {
-  title: 'MC Poll System',
-  description: 'A modern polling system built with Next.js and Django',
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <StoreProvider>
-          <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <main className="flex-grow container mx-auto px-4 py-8">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </StoreProvider>
+      <body>
+        <Provider store={store}>
+          <Navbar />
+          {children}
+        </Provider>
       </body>
     </html>
   );

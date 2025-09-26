@@ -1,35 +1,40 @@
-// import { Poll, PollFilters } from '@/types/poll';
-// import { api } from './client';
+// src/lib/api/polls.ts
 
-// export const pollsApi = {
-//   getPolls: (filters: PollFilters = {}) => {
-//     const params = new URLSearchParams();
-    
-//     if (filters.search) params.append('search', filters.search);
-//     if (filters.status) params.append('status', filters.status);
-//     if (filters.ordering) params.append('ordering', filters.ordering);
-//     if (filters.page) params.append('page', filters.page.toString());
-    
-//     return api<{ count: number; next: string | null; previous: string | null; results: Poll[] }>(
-//       `/polls/?${params.toString()}`
-//     );
-//   },
-  
-//   getPoll: (id: string) => api<Poll>(`/polls/${id}/`),
-  
-//   getPollResults: (id: string) => api<Poll>(`/polls/${id}/results/`),
-  
-//   vote: (pollId: string, optionId: string, voterId: string) =>
-//     api(`/polls/${pollId}/vote/`, {
-//       method: 'POST',
-//       body: JSON.stringify({ option: optionId, voter_id: voterId }),
-//     }),
-  
-//   createPoll: (pollData: { question: string; expires_at: string; options: string[] }) =>
-//     api<Poll>('/polls/', {
-//       method: 'POST',
-//       body: JSON.stringify(pollData),
-//     }),
-  
-//   getActivePolls: () => api<Poll[]>('/polls/active/'),
-// };
+import { Poll } from '@/types/poll';
+
+export const pollsApi = {
+  fetchAll: async (): Promise<{ data: Poll[] }> => {
+    const data: Poll[] = [
+      {
+        id: '1',
+        question: 'What is your favorite color?',
+        created_at: new Date().toISOString(),
+        expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        is_active: true,
+        status: 'active',
+        total_votes: 120,
+        options: [
+          { id: '1', text: 'Red', vote_count: 40 },
+          { id: '2', text: 'Blue', vote_count: 50 },
+          { id: '3', text: 'Green', vote_count: 30 },
+        ],
+      },
+      {
+        id: '2',
+        question: 'Which framework do you prefer?',
+        created_at: new Date().toISOString(),
+        expires_at: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+        is_active: true,
+        status: 'active',
+        total_votes: 80,
+        options: [
+          { id: '1', text: 'React', vote_count: 50 },
+          { id: '2', text: 'Vue', vote_count: 20 },
+          { id: '3', text: 'Angular', vote_count: 10 },
+        ],
+      },
+    ];
+
+    return new Promise((resolve) => setTimeout(() => resolve({ data }), 500));
+  },
+};

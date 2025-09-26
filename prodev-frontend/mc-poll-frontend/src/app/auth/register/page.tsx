@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useAppDispatch } from '@/lib/hooks';
+import { register } from '@/lib/slices/authSlice';
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -12,8 +14,9 @@ export default function RegisterPage() {
     confirmPassword: '',
   });
   const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,32 +27,25 @@ export default function RegisterPage() {
       return;
     }
 
-    setIsLoading(true);
+    setLoading(true);
     try {
-      // In a real application, you would call your registration API here
-      // For now, we'll simulate a successful registration
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Redirect to login page after successful registration
+      await dispatch(register(formData)).unwrap();
       router.push('/auth/login?message=Registration successful. Please login.');
-    } catch (error:unknown) {
+    } catch {
       setError('Registration failed. Please try again.');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (
     <div className="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
       <h1 className="text-2xl font-bold text-center mb-6">Register to MC Polls</h1>
-      
+
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
           {error}
@@ -123,10 +119,10 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={loading}
           className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 disabled:opacity-50 transition-colors"
         >
-          {isLoading ? 'Registering...' : 'Register'}
+          {loading ? 'Registering...' : 'Register'}
         </button>
       </form>
 
