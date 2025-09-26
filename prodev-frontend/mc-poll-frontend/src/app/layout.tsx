@@ -1,17 +1,16 @@
+// src/app/layout.tsx
 'use client';
 
-import './globals.css';
-import { ReactNode } from 'react';
-import StoreProvider from '@/app/StoreProvider';
+import StoreProvider from './StoreProvider';
 import Navbar from '@/components/Navbar';
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 min-h-screen">
+      <body>
         <StoreProvider>
           <Navbar />
-          <main className="pt-6">{children}</main>
+          {children}
         </StoreProvider>
       </body>
     </html>

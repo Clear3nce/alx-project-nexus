@@ -1,14 +1,14 @@
+// src/lib/store.ts
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './slices/authSlice';
 import pollsReducer from './slices/pollsSlice';
 
-export const makeStore = () => configureStore({
+export const store = configureStore({
   reducer: {
     auth: authReducer,
     polls: pollsReducer,
   },
 });
 
-export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore['getState']>;
-export type AppDispatch = AppStore['dispatch'];
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

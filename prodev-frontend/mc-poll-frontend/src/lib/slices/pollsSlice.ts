@@ -1,3 +1,4 @@
+// src/lib/slices/pollsSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 
 export interface PollOption {
@@ -23,8 +24,8 @@ interface PollsState {
   error: string | null;
 }
 
-export const fetchPolls = createAsyncThunk<Poll[]>('polls/fetchPolls', async () => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
+export const fetchPolls = createAsyncThunk('polls/fetchPolls', async () => {
+  await new Promise((res) => setTimeout(res, 500));
   return [
     {
       id: '1',
@@ -40,7 +41,7 @@ export const fetchPolls = createAsyncThunk<Poll[]>('polls/fetchPolls', async () 
         { id: 'c', text: 'Green', vote_count: 12 },
       ],
     },
-  ];
+  ] as Poll[];
 });
 
 const initialState: PollsState = {
