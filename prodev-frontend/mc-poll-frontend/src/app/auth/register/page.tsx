@@ -32,7 +32,7 @@ export default function RegisterPage() {
       
       // Redirect to login page after successful registration
       router.push('/auth/login?message=Registration successful. Please login.');
-    } catch (error:any) {
+    } catch (error:unknown) {
       setError('Registration failed. Please try again.');
     } finally {
       setIsLoading(false);

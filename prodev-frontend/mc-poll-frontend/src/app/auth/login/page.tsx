@@ -27,7 +27,7 @@ export default function LoginPage() {
     try {
       await dispatch(loginUser(credentials)).unwrap();
       router.push('/polls');
-    } catch (error:any) {
+    } catch (error:unknown) {
       
       // Error is handled by the slice
     }
